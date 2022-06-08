@@ -1,0 +1,45 @@
+#pragma kernel CSMain
+
+float4 m_inverseSystemRotation;
+float3 m_systemPosition;
+RWStructuredBuffer<float3> m_worldPoint;
+RWStructuredBuffer<float3> m_localPoint;
+
+//Quaternion*Vector3
+//Source:https://forum.unity.com/threads/compute-shader-how-can-i-do-quaternion-vector3.763421/
+float4 qmul(float4 q1, float4 q2)
+{
+    return float4(
+        q2.xyz * q1.w + q1.xyz * q2.w + cross(q1.xyz, q2.xyz),
+        q1.w * q2.w - dot(q1.xyz, q2.xyz)
+        );
+}
+
+// Vector rotation with a quaternion
+// http://mathworld.wolfram.com/Quaternion.html
+float3 rotate_vector(float3 v, float4 r)
+{
+    float4 r_c = r * float4(-1, -1, -1, 1);
+    return qmul(r, qmul(float4(v, 0), r_c)).xyz;
+}
+
+float3 relocate(float3 wp) {
+//    public static void GetWorldToLocal_Point(in Vector3 worldPosition, in Vector3 positionReference, in Quaternion rotationReference, out Vector3 localPosition) = >
+//        localPosition = Quaternion.Inverse(rotationReference) * (worldPosition - positionReference);
+   return rotate_vector( (wp - m_systemPosition), m_inverseSystemRotation);
+  //  return (wp - m_systemPosition);
+}
+
+[numthreads(8,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    int idx = id.x;
+
+    if (m_worldPoint[idx].x == 0
+        && m_worldPoint[idx].y == 0
+        && m_worldPoint[idx].z == 0)
+        m_localPoint[idx] = float3(0, 0, 0);
+    else
+        m_localPoint[id.x] =
+            relocate(m_worldPoint[id.x]);
+}
