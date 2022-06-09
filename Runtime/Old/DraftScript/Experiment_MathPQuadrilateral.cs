@@ -38,16 +38,16 @@ public class Experiment_MathPQuadrilateral : MonoBehaviour
 
     void Update()
     {
-        Eloi.E_RelocationUtility.GetWorldToLocal_Point(m_worldPoint.position, m_target.m_origineSystemPoint, m_target.m_origineSystemOrientation, out Vector3 localPoint);
+        Eloi.E_RelocationUtility.GetWorldToLocal_Point(m_worldPoint.position, m_target.m_quadWorkspace.m_originPosition, m_target.m_quadWorkspace.m_origineDirection, out Vector3 localPoint);
         m_p = new Vector2(localPoint.x, localPoint.z);
         Vector3 lpFlat = localPoint;
         lpFlat.y = 0;
         Debug.DrawLine(Vector3.zero, localPoint, Color.red, Time.deltaTime);
         Debug.DrawLine(lpFlat, localPoint, Color.red, Time.deltaTime);
-        m_p0DL = new Vector2(m_target.m_pointsRelocatedAtOnDLTLFlat.m_downLeft.x, m_target.m_pointsRelocatedAtOnDLTLFlat.m_downLeft.z);
-        m_p1DR = new Vector2(m_target.m_pointsRelocatedAtOnDLTLFlat.m_downRight.x, m_target.m_pointsRelocatedAtOnDLTLFlat.m_downRight.z);
-        m_p2TR = new Vector2(m_target.m_pointsRelocatedAtOnDLTLFlat.m_topRight.x, m_target.m_pointsRelocatedAtOnDLTLFlat.m_topRight.z);
-        m_p3TL = new Vector2(m_target.m_pointsRelocatedAtOnDLTLFlat.m_topLeft.x, m_target.m_pointsRelocatedAtOnDLTLFlat.m_topLeft.z);
+        m_p0DL = new Vector2(m_target.m_quadWorkspace.m_zeroLocalSpace.m_downLeft.x, m_target.m_quadWorkspace.m_zeroLocalSpace.m_downLeft.z);
+        m_p1DR = new Vector2(m_target.m_quadWorkspace.m_zeroLocalSpace.m_downRight.x, m_target.m_quadWorkspace.m_zeroLocalSpace.m_downRight.z);
+        m_p2TR = new Vector2(m_target.m_quadWorkspace.m_zeroLocalSpace.m_topRight.x, m_target.m_quadWorkspace.m_zeroLocalSpace.m_topRight.z);
+        m_p3TL = new Vector2(m_target.m_quadWorkspace.m_zeroLocalSpace.m_topLeft.x, m_target.m_quadWorkspace.m_zeroLocalSpace.m_topLeft.z);
 
         m_n0 = -Vector2.Perpendicular   (m_p3TL - m_p0DL);
         m_n1 = Vector2.Perpendicular    (m_p1DR - m_p0DL);

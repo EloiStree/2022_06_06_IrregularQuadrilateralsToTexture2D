@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 //Shader_IrregularQuadrilateralsToTexture2D
@@ -14,13 +16,24 @@ public class Shader_WorldPointsToLocalPoints : MonoBehaviour
     public Vector3 [] m_localPointsArray;
     public void Update()
     {
-        Refresh();
+        ComputeInformation();
     }
 
     [ContextMenu("SetRotationForward")]
     public void SetRotationForward() => Quaternion.LookRotation(Vector3.forward);
 
-    void Refresh()
+    [ContextMenu("SetRotationForward")]
+    public void SetCoordinateSystem(Vector3 worldPoint, Quaternion direction) {
+        m_systemWorldRotation = direction;
+        m_systemWorldPosition = worldPoint;
+    }
+    public void SetPoints(in IEnumerable<Vector3> points)
+    {
+        m_worldPoints = points.ToList();
+    }
+
+    [ContextMenu("Compute Given Data")]
+    public void ComputeInformation()
     {
         if (m_worldPoints == null || m_worldPoints.Count <= 0)
             return;

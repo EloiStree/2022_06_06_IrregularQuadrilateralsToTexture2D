@@ -13,6 +13,7 @@ RWTexture2D<float4> Result;
  float2 m_p2TR;
  float2 m_p3TL;
 
+
  RWStructuredBuffer<float3> m_localPointsArray;
 
 

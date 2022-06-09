@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Experiment_DrawRelocatedPoint : MonoBehaviour
 {
+    public bool m_usedDrawing;
     public IrregularQuadrilateralsMono m_quadTarget;
     public WorldToLocalRelocationOfPointsMono m_relocator;
     public ContainMassGroupOfVector3Mono [] m_massPoints;
@@ -12,7 +13,7 @@ public class Experiment_DrawRelocatedPoint : MonoBehaviour
 
     public void Update()
     {
-        m_relocator.SetOrigine(m_quadTarget.m_origineSystemOrientation, m_quadTarget.m_origineSystemPoint);
+        m_relocator.SetOrigine(m_quadTarget.m_quadWorkspace.m_origineDirection, m_quadTarget.m_quadWorkspace.m_originPosition) ;
         for (int i = 0; i < m_massPoints.Length; i++)
         {
             m_massPoints[i].GetVector3Ref(out Vector3[] points);
@@ -22,7 +23,6 @@ public class Experiment_DrawRelocatedPoint : MonoBehaviour
 
 
     }
-
     public   Color m_drawColor = Color.white;
     public int m_drawMax = 10000;
     private void DrawPoints()
@@ -34,6 +34,7 @@ public class Experiment_DrawRelocatedPoint : MonoBehaviour
         {
             flatPoint = points[i];
             flatPoint.y = 0;
+            if(m_usedDrawing)
             Debug.DrawLine(flatPoint, points[i], m_drawColor,td );
         }
     }
